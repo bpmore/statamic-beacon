@@ -205,7 +205,7 @@ Off by default. On (settings screen, Preview and scheduler tab, or
 `fast_path.enabled`), a small script on every page asks this site, never
 the remote source, for the current emergency alerts every 60 seconds
 and shows a new one on the page a visitor already has open, then takes
-it down when it ends. The endpoint, `/!/statamic-beacon/live`, serves
+it down when it ends, whether the script or the server put it there. The endpoint, `/!/statamic-beacon/live`, serves
 what the scheduler last stored, already sanitized, with no-store
 headers, and is never written to the static cache. It is only as fresh
 as the scheduler.

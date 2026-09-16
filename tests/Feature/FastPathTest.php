@@ -64,6 +64,7 @@ it('serves the active emergency alerts for this audience from the store, rendere
     $data = $response->json();
 
     expect($data['enabled'])->toBeTrue()
+        ->and($data['severities'])->toBe(['emergency'])
         ->and($data['alerts'])->toHaveCount(1)
         ->and($data['alerts'][0]['severity'])->toBe('emergency')
         ->and($data['alerts'][0]['key'])->toStartWith('beacon:')
@@ -82,7 +83,8 @@ it('carries warnings too when configured, and the script knows which region take
 
     $data = $this->get('/!/statamic-beacon/live')->assertOk()->json();
 
-    expect(array_map(fn ($a) => $a['severity'], $data['alerts']))->toBe(['warning']);
+    expect(array_map(fn ($a) => $a['severity'], $data['alerts']))->toBe(['warning'])
+        ->and($data['severities'])->toBe(['emergency', 'warning']);
 });
 
 it('serves sanitized remote content and never fetches the remote source on the request', function () {

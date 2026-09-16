@@ -45,6 +45,9 @@ final class LiveController
         return $this->respond([
             'enabled' => true,
             'checked_at' => gmdate(DATE_ATOM),
+            // The severities this answer is authoritative for: a banner on
+            // the page at one of these that is not listed here has ended.
+            'severities' => array_map(fn (Severity $s) => $s->value, $severities),
             'alerts' => array_map(fn (Alert $a) => [
                 'id' => $a->id,
                 'key' => $a->dismissalKey(),

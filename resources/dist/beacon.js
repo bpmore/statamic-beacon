@@ -7,10 +7,13 @@
  *
  * Fast path (off unless the page carries [data-beacon-live]): every N
  * seconds ask this origin, never the remote source, for the current
- * emergency alerts and put a new one into the live region for its
- * severity, so a visitor with a page open for an hour still sees it.
- * The regions exist at load, empty, so the announcement happens; the
- * server-rendered banner above is a landmark and is never touched.
+ * emergency alerts. A new one goes into the live region for its severity,
+ * so a visitor with a page open for an hour still sees it. One that has
+ * ended comes down, whether the script put it up or the server did: the
+ * answer names the severities it is authoritative for, and any banner on
+ * the page at one of those severities that the answer no longer lists is
+ * removed. The regions exist at load, empty, so the announcement happens;
+ * the server-rendered banner above is a landmark and is never added to.
  */
 (function () {
   'use strict';
@@ -100,11 +103,17 @@
       wire(region);
     }
 
-    /* An injected alert the server no longer lists has ended. */
-    var injected = live.querySelectorAll('[data-beacon-injected]');
-    for (var j = 0; j < injected.length; j++) {
-      if (!keep[injected[j].getAttribute('data-beacon-key')]) {
-        injected[j].parentNode.removeChild(injected[j]);
+    /* An alert the server no longer lists has ended, whoever put it up.
+     * Only at the severities the answer covers: a warning on the page is
+     * not the endpoint's to withdraw when it only reports emergencies. */
+    var covers = {};
+    var severities = data.severities || ['emergency'];
+    for (var s = 0; s < severities.length; s++) { covers[severities[s]] = true; }
+    var onPageNow = document.querySelectorAll('.beacon[data-beacon-key]');
+    for (var j = 0; j < onPageNow.length; j++) {
+      var el = onPageNow[j];
+      if (covers[el.getAttribute('data-beacon-severity')] && !keep[el.getAttribute('data-beacon-key')]) {
+        remove(el);
       }
     }
   }

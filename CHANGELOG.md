@@ -31,7 +31,8 @@ First build against the v2 brief.
   `docs/reference`.
 - An optional emergency fast path: an endpoint on this origin serving
   the stored emergencies, and a script that injects a new one into a
-  `role="alert"` live region on an open page and removes it when it ends.
+  `role="alert"` live region on an open page and removes an ended one,
+  whether the script or the server put it there.
 - CAP geocode filtering: SAME and UGC codes mapped to audiences per source.
 - Commands: `beacon:install`, `beacon:tick`, `beacon:fetch`,
   `beacon:status`. A utility page under Tools.
