@@ -1,0 +1,92 @@
+title: Alert
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Title
+              instructions: 'Shown as the banner heading.'
+              validate:
+                - required
+          -
+            handle: severity
+            field:
+              type: select
+              display: Severity
+              instructions: 'Emergency alerts cannot be dismissed unless you say otherwise below.'
+              options:
+                info: Information
+                warning: Warning
+                emergency: Emergency
+              default: info
+              validate:
+                - required
+          -
+            handle: message
+            field:
+              type: bard
+              display: Message
+              instructions: 'The full alert. Bold, italic and links only.'
+              buttons:
+                - bold
+                - italic
+                - anchor
+              save_html: true
+              validate:
+                - required
+          -
+            handle: teaser
+            field:
+              type: bard
+              display: Teaser
+              instructions: 'Optional. When filled, the banner shows this and links to the full alert at the URL below.'
+              buttons:
+                - bold
+                - italic
+                - anchor
+              save_html: true
+          -
+            handle: link
+            field:
+              type: link
+              display: 'Read more link'
+              instructions: 'Where the "Read more" link goes. Used only when there is a teaser.'
+  schedule:
+    display: Schedule & audience
+    sections:
+      -
+        fields:
+          -
+            handle: starts_at
+            field:
+              type: date
+              display: 'Starts at'
+              time_enabled: true
+              instructions: 'Leave empty to start as soon as it is published.'
+          -
+            handle: ends_at
+            field:
+              type: date
+              display: 'Ends at'
+              time_enabled: true
+              instructions: 'Leave empty to show until unpublished.'
+          -
+            handle: audiences
+            field:
+              type: select
+              display: Audiences
+              multiple: true
+              taggable: true
+              instructions: 'Leave empty to show on every site. Otherwise, the exact audience names from the Beacon config.'
+          -
+            handle: dismissible
+            field:
+              type: toggle
+              display: Dismissible
+              instructions: 'Whether a visitor can close the banner. Emergency alerts default to not dismissible when this is left off.'
+              default: true

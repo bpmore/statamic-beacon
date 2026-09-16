@@ -1,0 +1,26 @@
+/* Beacon: site-wide alert banner. Publishable and overridable. */
+.beacon-stack{margin:0;padding:0}
+.beacon{box-sizing:border-box;margin:0;padding:.75rem 1rem;border-bottom:3px solid;font-family:inherit;line-height:1.4;color:#111;background:#f4f4f4;border-color:#666}
+.beacon *{box-sizing:border-box}
+.beacon__inner{max-width:72rem;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;align-items:baseline}
+.beacon__severity{grid-column:1;margin:0;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.8em}
+.beacon__severity::before{content:"";display:inline-block;width:.9em;height:.9em;margin-right:.4em;vertical-align:-.1em;border-radius:50%;background:currentColor;border:2px solid currentColor}
+.beacon--info .beacon__severity::before{border-radius:0}
+.beacon--warning .beacon__severity::before{border-radius:0;transform:rotate(45deg);width:.75em;height:.75em}
+.beacon__title{grid-column:2;margin:0;font-size:1.1em;font-weight:700}
+.beacon__body{grid-column:2;margin:0}
+.beacon__body p{margin:0 0 .25em}
+.beacon__body p:last-child{margin-bottom:0}
+.beacon__body a,.beacon__link{color:inherit;text-decoration:underline;text-underline-offset:.15em}
+.beacon__more{grid-column:2;margin:.25rem 0 0}
+.beacon__dismiss{grid-column:3;grid-row:1 / span 3;align-self:start;justify-self:end;margin:0;padding:.35rem .6rem;border:2px solid currentColor;border-radius:.25rem;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.beacon__dismiss:hover{background:rgba(0,0,0,.08)}
+.beacon a:focus-visible,.beacon button:focus-visible{outline:3px solid currentColor;outline-offset:2px}
+.beacon__sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.beacon__preview{grid-column:1 / -1;margin:0 0 .25rem;padding:.25rem .5rem;font-size:.85em;font-weight:700;background:repeating-linear-gradient(45deg,#fde68a,#fde68a 10px,#fcd34d 10px,#fcd34d 20px);color:#111;border:2px dashed #92400e}
+.beacon--info{background:#e8f1fb;border-color:#1d4ed8;color:#0c2a5e}
+.beacon--warning{background:#fff4d6;border-color:#b45309;color:#4a2a00}
+.beacon--emergency{background:#7f1d1d;border-color:#450a0a;color:#fff}
+@media (max-width:40em){.beacon__inner{grid-template-columns:1fr}.beacon__severity,.beacon__title,.beacon__body,.beacon__more{grid-column:1}.beacon__dismiss{grid-column:1;grid-row:auto;justify-self:start}}
+@media (prefers-reduced-motion:reduce){.beacon,.beacon *{transition:none!important;animation:none!important}}
+@media (forced-colors:active){.beacon{border-bottom:3px solid CanvasText;background:Canvas;color:CanvasText}.beacon__dismiss{border-color:ButtonText}.beacon__severity::before{background:CanvasText;forced-color-adjust:none}}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hada.farm/schemas/beacon/alerts-file.json",
+  "title": "Beacon alerts file",
+  "description": "A JSON (or YAML with the same keys) file the github `file` and `gist` modes read. The same shape the local collection produces.",
+  "type": "object",
+  "required": ["alerts"],
+  "properties": {
+    "alerts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/alert" }
+    }
+  },
+  "$defs": {
+    "alert": {
+      "type": "object",
+      "required": ["title", "severity"],
+      "properties": {
+        "id": { "type": "string", "description": "Stable across edits. Dismissals are keyed by id and content, so keep it and change the content." },
+        "title": { "type": "string", "description": "Plain text. Rendered as text, never as HTML." },
+        "severity": { "type": "string", "enum": ["info", "warning", "emergency"] },
+        "body": { "type": "string", "description": "HTML. Sanitized on fetch: paragraphs, inline formatting, links and lists survive." },
+        "markdown": { "type": "string", "description": "Used when body is absent. Rendered with raw HTML stripped, then sanitized." },
+        "teaser": { "type": "string", "description": "HTML. When present the banner shows this and links to url with a Read more link." },
+        "audiences": { "type": "array", "items": { "type": "string" }, "description": "Exact audience names. Empty or absent means every site." },
+        "starts_at": { "type": "string", "format": "date-time" },
+        "ends_at": { "type": "string", "format": "date-time" },
+        "url": { "type": "string", "description": "http or https. Anything else becomes #." },
+        "dismissible": { "type": "boolean", "description": "Defaults to true, and to false for emergency." }
+      },
+      "additionalProperties": true
+    }
+  }
+}

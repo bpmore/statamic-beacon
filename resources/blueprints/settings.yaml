@@ -1,0 +1,750 @@
+# Beacon's settings, as a form in the control panel, at Addons, Beacon,
+# Settings.
+#
+# Written for the person who runs communications, not the developer. The
+# form wins once it has been saved; the developer's config file answers
+# until then, and for anything the form leaves blank. Every default below
+# matches that file, and a test checks it.
+
+tabs:
+  sources:
+    display: 'Alert sources'
+    sections:
+      -
+        display: 'Where alerts come from'
+        instructions: 'Add one block per source. They are checked in order and their alerts are combined. Keep the "Alerts written on this site" block if you want alerts from this control panel to keep showing. Leave the list empty and the developer''s config file decides. To turn every banner off, add a "Nothing" block and remove the others.'
+        fields:
+          -
+            handle: sources
+            field:
+              type: replicator
+              display: Sources
+              collapse: accordion
+              button_label: 'Add a source'
+              default:
+                -
+                  type: collection
+                  enabled: true
+                  collection: alerts
+              sets:
+                main:
+                  display: Sources
+                  sets:
+                    collection:
+                      display: 'Alerts written on this site'
+                      instructions: 'The Alerts collection in this control panel.'
+                      icon: pencil
+                      fields:
+                        -
+                          handle: collection
+                          field:
+                            type: text
+                            display: 'Collection handle'
+                            default: alerts
+                            width: 50
+                    wordpress:
+                      display: 'WordPress.com alert site'
+                      instructions: 'A WordPress.com site where staff publish one post per alert, read straight from WordPress.com. A post with a category such as urgent-campus, alert-clinic or fyi-north appears here for the matching audience. Only the address is needed.'
+                      icon: rss
+                      fields:
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: 'Feed address'
+                            instructions: 'https://public-api.wordpress.com/rest/v1.1/sites/YOUR_SITE_ID/posts/?number=20, with your site''s id or its address in place of YOUR_SITE_ID. Independent of the institution''s own web server, so the banner still works when that server does not. A proxy address in front of it also works.'
+                            validate:
+                              - required
+                              - url
+                        -
+                          handle: key
+                          field:
+                            type: text
+                            display: Name
+                            instructions: 'How this source is labelled on the Beacon page under Tools.'
+                            default: wordpress
+                            width: 33
+                        -
+                          handle: poll
+                          field:
+                            type: integer
+                            display: 'Check every (seconds)'
+                            instructions: 'How often the feed is fetched. 300 is five minutes. This plus one minute is the longest a new alert can take to appear.'
+                            default: 300
+                            width: 33
+                        -
+                          handle: max_severity
+                          field:
+                            type: select
+                            display: 'Never higher than'
+                            instructions: 'Cap what this feed can raise. Leave empty for no cap.'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 33
+                        -
+                          handle: audiences
+                          field:
+                            type: list
+                            display: 'Only for these audiences'
+                            instructions: 'Leave empty to let the feed''s own categories decide who sees each alert.'
+                        -
+                          handle: advanced
+                          field:
+                            type: toggle
+                            display: 'Show advanced settings'
+                            default: false
+                        -
+                          handle: timeout
+                          field:
+                            type: integer
+                            display: 'Give up after (seconds)'
+                            default: 5
+                            width: 33
+                            if:
+                              advanced: 'equals true'
+                        -
+                          handle: max_age
+                          field:
+                            type: integer
+                            display: 'Keep the last good answer for (seconds)'
+                            instructions: 'If the feed stops answering, its last alerts stay up this long, then come down. 86400 is a day.'
+                            default: 86400
+                            width: 66
+                            if:
+                              advanced: 'equals true'
+                    http:
+                      display: 'Another JSON feed'
+                      instructions: 'A JSON address, with the names of the fields to read.'
+                      icon: code
+                      fields:
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: 'Feed address'
+                            validate:
+                              - required
+                              - url
+                        -
+                          handle: key
+                          field:
+                            type: text
+                            display: Name
+                            default: json
+                            width: 33
+                        -
+                          handle: poll
+                          field:
+                            type: integer
+                            display: 'Check every (seconds)'
+                            default: 300
+                            width: 33
+                        -
+                          handle: max_severity
+                          field:
+                            type: select
+                            display: 'Never higher than'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 33
+                        -
+                          handle: audiences
+                          field:
+                            type: list
+                            display: 'Only for these audiences'
+                        -
+                          handle: map_root
+                          field:
+                            type: text
+                            display: 'List of alerts is at'
+                            instructions: 'A dotted path, for example posts or data.items. Leave empty if the whole response is the list.'
+                            width: 50
+                        -
+                          handle: map_id
+                          field:
+                            type: text
+                            display: 'Id field'
+                            default: id
+                            width: 50
+                        -
+                          handle: map_title
+                          field:
+                            type: text
+                            display: 'Title field'
+                            default: title
+                            width: 33
+                        -
+                          handle: map_body
+                          field:
+                            type: text
+                            display: 'Body field'
+                            default: body
+                            width: 33
+                        -
+                          handle: map_url
+                          field:
+                            type: text
+                            display: 'Link field'
+                            default: url
+                            width: 33
+                        -
+                          handle: map_severity
+                          field:
+                            type: text
+                            display: 'Severity field'
+                            instructions: 'The field holding info, warning or emergency, or a word the table below translates.'
+                            default: severity
+                            width: 50
+                        -
+                          handle: map_audiences
+                          field:
+                            type: text
+                            display: 'Audiences field'
+                            instructions: 'A dotted path; an asterisk means each item, for example tags.*.slug.'
+                            width: 50
+                        -
+                          handle: pattern
+                          field:
+                            type: text
+                            display: 'Tag pattern'
+                            instructions: 'Optional. When the audiences field holds tags like urgent-campus, a pattern with (?<severity>...) and (?<audience>...) groups pulls both out of one tag.'
+                        -
+                          handle: severity_map
+                          field:
+                            type: grid
+                            display: 'Severity words'
+                            instructions: 'What the feed''s own words mean here.'
+                            mode: table
+                            add_row: 'Add a word'
+                            fields:
+                              -
+                                handle: from
+                                field:
+                                  type: text
+                                  display: 'Feed says'
+                              -
+                                handle: to
+                                field:
+                                  type: select
+                                  display: 'Means'
+                                  options:
+                                    info: Information
+                                    warning: Warning
+                                    emergency: Emergency
+                        -
+                          handle: default_severity
+                          field:
+                            type: select
+                            display: 'If no severity is found'
+                            instructions: 'Leave empty to skip such alerts.'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 50
+                        -
+                          handle: timeout
+                          field:
+                            type: integer
+                            display: 'Give up after (seconds)'
+                            default: 5
+                            width: 25
+                        -
+                          handle: max_age
+                          field:
+                            type: integer
+                            display: 'Keep the last good answer for (seconds)'
+                            default: 86400
+                            width: 25
+                    feed:
+                      display: 'RSS or Atom feed'
+                      instructions: 'Most publishing platforms offer one. Categories carry severity and audience: a post in category urgent-campus is an emergency for the campus audience.'
+                      icon: rss
+                      fields:
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: 'Feed address'
+                            validate:
+                              - required
+                              - url
+                        -
+                          handle: key
+                          field:
+                            type: text
+                            display: Name
+                            default: feed
+                            width: 33
+                        -
+                          handle: poll
+                          field:
+                            type: integer
+                            display: 'Check every (seconds)'
+                            default: 300
+                            width: 33
+                        -
+                          handle: max_severity
+                          field:
+                            type: select
+                            display: 'Never higher than'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 33
+                        -
+                          handle: audiences
+                          field:
+                            type: list
+                            display: 'Only for these audiences'
+                        -
+                          handle: default_severity
+                          field:
+                            type: select
+                            display: 'If no category names a severity'
+                            instructions: 'Leave empty to skip such posts.'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 50
+                        -
+                          handle: max_age
+                          field:
+                            type: integer
+                            display: 'Keep the last good answer for (seconds)'
+                            default: 86400
+                            width: 50
+                    cap:
+                      display: 'Weather and emergency agency (CAP)'
+                      instructions: 'Common Alerting Protocol, the format the National Weather Service and other agencies publish in. Only real alerts show; test messages never do.'
+                      icon: weather
+                      fields:
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: 'Feed address'
+                            instructions: 'For the NWS: https://api.weather.gov/alerts/active?point=LAT,LON'
+                            validate:
+                              - required
+                              - url
+                        -
+                          handle: user_agent
+                          field:
+                            type: text
+                            display: 'Who to say you are'
+                            instructions: 'The NWS asks every caller to identify itself, for example: My Hospital (webteam@example.org).'
+                            validate:
+                              - required
+                        -
+                          handle: key
+                          field:
+                            type: text
+                            display: Name
+                            default: cap
+                            width: 33
+                        -
+                          handle: poll
+                          field:
+                            type: integer
+                            display: 'Check every (seconds)'
+                            default: 300
+                            width: 33
+                        -
+                          handle: max_severity
+                          field:
+                            type: select
+                            display: 'Never higher than'
+                            instructions: 'Warning is the sensible cap for a public feed.'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            default: warning
+                            clearable: true
+                            width: 33
+                        -
+                          handle: audiences
+                          field:
+                            type: list
+                            display: 'Show to these audiences'
+                            instructions: 'Weather alerts are by place, not by category, so name the audiences here. Empty means every site.'
+                        -
+                          handle: max_age
+                          field:
+                            type: integer
+                            display: 'Keep the last good answer for (seconds)'
+                            default: 86400
+                            width: 50
+                    github_file:
+                      display: 'A file on GitHub'
+                      instructions: 'A JSON or YAML file in a public repository. Reviewed, versioned and branch-protected, and it does not count against GitHub''s request limit. The recommended remote source.'
+                      icon: git
+                      fields:
+                        -
+                          handle: owner
+                          field:
+                            type: text
+                            display: 'Owner'
+                            width: 33
+                            validate:
+                              - required
+                        -
+                          handle: repo
+                          field:
+                            type: text
+                            display: 'Repository'
+                            width: 33
+                            validate:
+                              - required
+                        -
+                          handle: ref
+                          field:
+                            type: text
+                            display: 'Branch'
+                            default: main
+                            width: 33
+                        -
+                          handle: path
+                          field:
+                            type: text
+                            display: 'File path'
+                            default: alerts.json
+                            validate:
+                              - required
+                        -
+                          handle: key
+                          field:
+                            type: text
+                            display: Name
+                            default: github
+                            width: 33
+                        -
+                          handle: poll
+                          field:
+                            type: integer
+                            display: 'Check every (seconds)'
+                            default: 300
+                            width: 33
+                        -
+                          handle: max_severity
+                          field:
+                            type: select
+                            display: 'Never higher than'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 33
+                        -
+                          handle: audiences
+                          field:
+                            type: list
+                            display: 'Only for these audiences'
+                        -
+                          handle: token
+                          field:
+                            type: text
+                            display: 'Access token (optional)'
+                            instructions: 'Only for a private repository. A token expires one day and takes the banner with it, so prefer a public one.'
+                            input_type: password
+                        -
+                          handle: max_age
+                          field:
+                            type: integer
+                            display: 'Keep the last good answer for (seconds)'
+                            default: 86400
+                            width: 50
+                    github_issues:
+                      display: 'Open issues on GitHub'
+                      instructions: 'Each open issue with the label below is an alert. Labels such as urgent-campus carry severity and audience. Closing the issue ends the alert. Without a token GitHub allows 60 checks an hour per network address, shared with anything else on that address.'
+                      icon: git
+                      fields:
+                        -
+                          handle: owner
+                          field:
+                            type: text
+                            display: 'Owner'
+                            width: 33
+                            validate:
+                              - required
+                        -
+                          handle: repo
+                          field:
+                            type: text
+                            display: 'Repository'
+                            width: 33
+                            validate:
+                              - required
+                        -
+                          handle: label
+                          field:
+                            type: text
+                            display: 'Label that marks an alert'
+                            default: alert
+                            width: 33
+                        -
+                          handle: key
+                          field:
+                            type: text
+                            display: Name
+                            default: issues
+                            width: 33
+                        -
+                          handle: poll
+                          field:
+                            type: integer
+                            display: 'Check every (seconds)'
+                            default: 300
+                            width: 33
+                        -
+                          handle: max_severity
+                          field:
+                            type: select
+                            display: 'Never higher than'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 33
+                        -
+                          handle: audiences
+                          field:
+                            type: list
+                            display: 'Only for these audiences'
+                        -
+                          handle: token
+                          field:
+                            type: text
+                            display: 'Access token (optional)'
+                            instructions: 'Raises the limit to 5,000 checks an hour. Optional on purpose.'
+                            input_type: password
+                        -
+                          handle: max_age
+                          field:
+                            type: integer
+                            display: 'Keep the last good answer for (seconds)'
+                            default: 86400
+                            width: 50
+                    gist:
+                      display: 'A public Gist'
+                      instructions: 'The raw address of a public Gist holding the same JSON or YAML as the file source. No review or branch protection.'
+                      icon: git
+                      fields:
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            display: 'Raw Gist address'
+                            validate:
+                              - required
+                              - url
+                        -
+                          handle: key
+                          field:
+                            type: text
+                            display: Name
+                            default: gist
+                            width: 33
+                        -
+                          handle: poll
+                          field:
+                            type: integer
+                            display: 'Check every (seconds)'
+                            default: 300
+                            width: 33
+                        -
+                          handle: max_severity
+                          field:
+                            type: select
+                            display: 'Never higher than'
+                            options:
+                              info: Information
+                              warning: Warning
+                              emergency: Emergency
+                            clearable: true
+                            width: 33
+                        -
+                          handle: audiences
+                          field:
+                            type: list
+                            display: 'Only for these audiences'
+                    off:
+                      display: Nothing
+                      instructions: 'No alerts from anywhere. Use this on its own to switch the banner off without uninstalling.'
+                      icon: hidden
+                      fields: []
+  site:
+    display: 'This site'
+    sections:
+      -
+        display: 'Who this site is'
+        instructions: 'An audience is a name shared by a group of sites, such as campus, clinic or north. An alert aimed at an audience shows only on sites declared as that audience; an alert aimed at nobody in particular shows everywhere. Names must match exactly.'
+        fields:
+          -
+            handle: audience
+            field:
+              type: text
+              display: 'This site''s audience'
+              default: default
+              width: 50
+          -
+            handle: site_audiences
+            field:
+              type: grid
+              display: 'Audiences by site'
+              instructions: 'For a multi-site install. A site not listed here uses the audience above.'
+              mode: table
+              add_row: 'Add a site'
+              fields:
+                -
+                  handle: site
+                  field:
+                    type: sites
+                    display: Site
+                    max_items: 1
+                -
+                  handle: audience
+                  field:
+                    type: text
+                    display: Audience
+  banner:
+    display: 'The banner'
+    sections:
+      -
+        display: 'How it reads'
+        fields:
+          -
+            handle: heading_level
+            field:
+              type: select
+              display: 'Heading level'
+              instructions: 'The page already has its one h1. The banner''s heading sits below it.'
+              options:
+                h2: h2
+                h3: h3
+                h4: h4
+                h5: h5
+                h6: h6
+              default: h2
+              clearable: false
+              width: 33
+          -
+            handle: label_info
+            field:
+              type: text
+              display: 'Word for information'
+              default: Information
+              width: 33
+          -
+            handle: label_warning
+            field:
+              type: text
+              display: 'Word for warning'
+              default: Warning
+              width: 33
+          -
+            handle: label_emergency
+            field:
+              type: text
+              display: 'Word for emergency'
+              default: Emergency
+              width: 33
+          -
+            handle: more_text
+            field:
+              type: text
+              display: 'Read more link text'
+              instructions: 'The alert''s title is added for screen readers, so "Read more" is enough.'
+              default: 'Read more'
+              width: 33
+          -
+            handle: dismiss_text
+            field:
+              type: text
+              display: 'Dismiss button text'
+              default: Dismiss
+              width: 33
+          -
+            handle: preview_text
+            field:
+              type: text
+              display: 'Preview marker text'
+              default: 'Preview. This banner is visible only to you.'
+      -
+        display: 'How it is built'
+        fields:
+          -
+            handle: assets
+            field:
+              type: select
+              display: 'Styles and script'
+              instructions: 'Inline puts them on the page with the banner and needs nothing published. Linked uses the published files under public/vendor. None is for a theme that brings its own.'
+              options:
+                inline: Inline
+                linked: Linked
+                none: None
+              default: inline
+              clearable: false
+              width: 50
+          -
+            handle: compat
+            field:
+              type: toggle
+              display: 'Legacy class names'
+              instructions: 'Emit the structure and class names of the old banner so an existing stylesheet keeps working during a migration. A stopgap, not a way to live.'
+              default: false
+              width: 50
+          -
+            handle: compat_prefix
+            field:
+              type: text
+              display: 'Legacy class prefix'
+              instructions: 'What the old banner''s classes started with. The banner gets PREFIX-urgent, PREFIX-alert, PREFIX-fyi and an id of PREFIX-message.'
+              default: legacy-alert
+              width: 50
+  preview:
+    display: 'Preview and scheduler'
+    sections:
+      -
+        display: Preview
+        instructions: 'A signed-in user with the "View Beacon previews" permission can add ?beacon-preview=emergency (or warning, or info) to any page address and see the newest alert, published or not, at that severity with a preview marker. Nobody else sees anything.'
+        fields:
+          -
+            handle: preview_enabled
+            field:
+              type: toggle
+              display: 'Allow previews'
+              default: true
+              width: 50
+          -
+            handle: preview_parameter
+            field:
+              type: text
+              display: 'Address parameter'
+              default: beacon-preview
+              width: 50
+      -
+        display: Scheduler
+        instructions: 'Remote sources are fetched by the server''s scheduler, once a minute. The Beacon page under Tools warns when it has not run.'
+        fields:
+          -
+            handle: warn_after
+            field:
+              type: integer
+              display: 'Warn after (seconds)'
+              default: 300
+              width: 50

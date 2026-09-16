@@ -1,0 +1,22 @@
+{
+  "alerts": [
+    {
+      "id": "boil-water-2026-03",
+      "title": "Boil water notice",
+      "severity": "emergency",
+      "teaser": "<p>Boil tap water before drinking until further notice.</p>",
+      "body": "<p>Boil tap water before drinking until further notice.</p><p>A main break on the east campus has dropped pressure below the safe threshold. Bottled water is available at every information desk.</p>",
+      "url": "https://example.org/news/boil-water",
+      "audiences": ["campus", "clinic"],
+      "starts_at": "2026-03-01T09:00:00-06:00",
+      "ends_at": "2026-03-02T09:00:00-06:00"
+    },
+    {
+      "id": "lot-b",
+      "title": "Lot B closed Saturday",
+      "severity": "info",
+      "markdown": "Lot B is closed Saturday for resurfacing. Use **Lot C** or the deck.",
+      "audiences": ["campus"]
+    }
+  ]
+}

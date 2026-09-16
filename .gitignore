@@ -1,0 +1,10 @@
+/vendor
+/node_modules
+composer.lock
+.phpunit.result.cache
+.DS_Store
+/.phpunit.cache
+.playwright-mcp
+
+# The build brief and conventions are working documents, kept out of the public repo.
+/docs/private

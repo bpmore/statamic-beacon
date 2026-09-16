@@ -1,0 +1,66 @@
+{
+    "name": "bpmore/statamic-beacon",
+    "description": "A site-wide alert banner for Statamic: authored locally or fed from a remote source, scheduled, severity-graded, audience-targeted, accessible, and correct behind static caching.",
+    "keywords": [
+        "statamic",
+        "alert",
+        "banner",
+        "announcement",
+        "emergency",
+        "cap"
+    ],
+    "license": "MIT",
+    "type": "statamic-addon",
+    "homepage": "https://hada.farm",
+    "authors": [
+        {
+            "name": "Brent Passmore",
+            "homepage": "https://hada.farm"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "league/commonmark": "^2.4",
+        "statamic/cms": "^6.27",
+        "symfony/html-sanitizer": "^7.0 || ^8.0",
+        "symfony/yaml": "^7.0 || ^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.11 || ^11.0",
+        "pestphp/pest": "^3.8 || ^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bpmore\\Beacon\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bpmore\\Beacon\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest"
+    },
+    "extra": {
+        "statamic": {
+            "name": "Beacon",
+            "slug": "statamic-beacon"
+        },
+        "laravel": {
+            "providers": [
+                "Bpmore\\Beacon\\ServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
