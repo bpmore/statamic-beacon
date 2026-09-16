@@ -24,6 +24,12 @@ class Beacon extends Tags
         $addon = app(Addon::class);
         $html = $addon->render(request());
 
+        $fastPath = $addon->fastPath();
+        if ($fastPath['enabled'] && $addon->previewSeverity(request()) === null) {
+            $html .= (new \Bpmore\Beacon\Render\Banner($addon->options()))
+                ->liveContainers(route('statamic.beacon.live', [], false), $fastPath['interval']);
+        }
+
         if ($html === '') {
             return '';
         }

@@ -32,6 +32,8 @@ Rules for any model working in this repository.
   control without script.
 - Preview needs a signed-in user with the permission and a value from
   the enum, and bypasses the static cache both ways.
+- The fast path's live regions exist at load, empty, and the
+  server-rendered banner is never placed inside them.
 
 ## Testing
 
@@ -58,8 +60,9 @@ Rules for any model working in this repository.
 ## Process
 
 - Do not add a dependency the brief does not name without asking.
-- Do not build the emergency fast path or CAP geocode filtering without
-  asking; the brief says so.
+- The fast path's endpoint serves the store only. It must never fetch a
+  remote source during a request, and the script must never be pointed
+  anywhere but this origin.
 
 ## Names
 

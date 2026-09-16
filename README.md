@@ -186,7 +186,9 @@ The NWS asks for a User-Agent that identifies you. Severity comes from CAP
 `severity` and `urgency` together: Extreme, or Severe and Immediate, is
 `emergency`; Severe or Moderate is `warning`; everything else is `info`.
 Override with `matrix`. Every alert from a CAP source goes to the source's
-`audiences`. Filtering by geocode is not built.
+`audiences`, or, for a feed covering several places, `geocodes` maps each
+SAME county code or UGC zone to its own audiences and drops alerts that
+carry none of them.
 
 ## Preview
 
@@ -196,6 +198,24 @@ newest alert, published or not, shows at that severity with a visible
 preview marker. Anyone else sees the page as it is. A value outside the
 three severities is ignored for everyone. Previews bypass the static
 cache in both directions.
+
+## Live emergency updates
+
+Off by default. On (settings screen, Preview and scheduler tab, or
+`fast_path.enabled`), a small script on every page asks this site, never
+the remote source, for the current emergency alerts every 60 seconds
+and shows a new one on the page a visitor already has open, then takes
+it down when it ends. The endpoint, `/!/statamic-beacon/live`, serves
+what the scheduler last stored, already sanitized, with no-store
+headers, and is never written to the static cache. It is only as fresh
+as the scheduler.
+
+Injected alerts go into live regions that exist, empty, at page load:
+`role="status"` for information and warnings, `role="alert"` for
+emergencies. The server-rendered banner stays a landmark and is never
+inside them, so nothing is announced twice.
+
+![An emergency injected into an open page](docs/images/fast-path.png)
 
 ## Dismissal
 
@@ -255,9 +275,9 @@ long-term mode.
 
 Not a notification system. Not a cookie banner. Not a modal, ever. Not a
 control panel notification. Not an authoring tool for a remote source:
-Beacon consumes feeds, it does not publish to them. No client-side
-polling between scheduled fetches (an optional emergency fast path is
-designed but not built). No geocode filtering for CAP.
+Beacon consumes feeds, it does not publish to them. No polling of the
+remote source from the browser, ever: the optional live update asks this
+site only.
 
 ## A note on where the feed lives
 

@@ -112,3 +112,21 @@ function assertVueTemplateIsWellFormed(string $html): void
 
     expect($ok)->toBeTrue('the template is not well formed, so Vue would not compile it: '.implode('; ', $errors));
 }
+
+/** The page without its inline scripts and styles: the markup a reader gets, not the code. */
+function markupOnly(string $html): string
+{
+    return (string) preg_replace('#<(script|style)\b[^>]*>.*?</\1>#s', '', $html);
+}
+
+/** Save the screen as a person pressing Save would. */
+function saveSettings(array $values): void
+{
+    $settings = \Statamic\Facades\Addon::get(\Bpmore\Beacon\Settings::PACKAGE)->settings();
+
+    foreach ($values as $handle => $value) {
+        $settings->set($handle, $value);
+    }
+
+    $settings->save();
+}

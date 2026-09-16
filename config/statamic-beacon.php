@@ -74,6 +74,10 @@ return [
         //  'url' => 'https://api.weather.gov/alerts/active?point=34.7465,-92.2896',
         //  'headers' => ['User-Agent' => 'beacon (you@example.org)', 'Accept' => 'application/geo+json'],
         //  'max_severity' => 'warning', 'audiences' => ['campus', 'clinic']],
+        // Or, for a feed covering several places, aim each area at its own
+        // audiences by SAME county code or UGC zone. An alert carrying none
+        // of the listed codes is not shown. Replaces `audiences` when set.
+        //  'geocodes' => ['005119' => ['campus', 'clinic'], 'ARZ044' => ['north']],
 
         // A JSON or YAML file in a public repository: reviewed, versioned,
         // branch-protected, served from a CDN and not counted against the
@@ -168,6 +172,26 @@ return [
     | `warn_after` seconds.
     |
     */
+    /*
+    |--------------------------------------------------------------------------
+    | Emergency fast path
+    |--------------------------------------------------------------------------
+    |
+    | Off by default. When on, a small script on every page asks this
+    | site (never the remote source) for the current emergency alerts
+    | every `interval` seconds and shows a new one without a page load,
+    | so a visitor who has had a page open for an hour still sees it. The
+    | endpoint serves what the scheduler last stored, already sanitized,
+    | so it is only as fresh as the scheduler. `severities` is which
+    | levels travel this way; emergencies only, unless you say otherwise.
+    |
+    */
+    'fast_path' => [
+        'enabled' => false,
+        'interval' => 60,
+        'severities' => ['emergency'],
+    ],
+
     'storage' => storage_path('beacon'),
 
     'scheduler' => [

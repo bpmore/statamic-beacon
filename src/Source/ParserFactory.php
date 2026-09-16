@@ -62,6 +62,7 @@ final class ParserFactory
                 (array) $source->option('matrix', CapParser::DEFAULT_MATRIX),
                 $source->audiences,
                 (bool) $source->option('append_instruction', true),
+                self::geocodes($source->option('geocodes')),
             ),
             'github' => match ((string) $source->option('mode', 'file')) {
                 'issues' => new GitHubIssuesParser(
@@ -75,6 +76,44 @@ final class ParserFactory
             },
             default => throw new InvalidArgumentException("Source `{$source->driver}` is not a remote source."),
         };
+    }
+
+    /**
+     * The geocode map, from either shape config can hold: a map of code to
+     * audiences, or the settings screen's rows of `code` and `audiences`.
+     *
+     * @return array<string, list<string>>
+     */
+    public static function geocodes(mixed $raw): array
+    {
+        $out = [];
+
+        foreach (is_array($raw) ? $raw : [] as $key => $value) {
+            if (is_array($value) && isset($value['code'])) {
+                $code = (string) $value['code'];
+                $audiences = $value['audiences'] ?? [];
+            } else {
+                $code = (string) $key;
+                $audiences = $value;
+            }
+
+            if (is_string($audiences)) {
+                $audiences = preg_split('/[\s,]+/', $audiences) ?: [];
+            }
+
+            $list = [];
+            foreach ((array) $audiences as $a) {
+                if (is_scalar($a) && trim((string) $a) !== '') {
+                    $list[] = trim((string) $a);
+                }
+            }
+
+            if (trim($code) !== '' && $list !== []) {
+                $out[trim($code)] = $list;
+            }
+        }
+
+        return $out;
     }
 
     /** @return array<string, string> */

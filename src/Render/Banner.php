@@ -45,6 +45,30 @@ final class Banner
         return $out.'</div>';
     }
 
+    /**
+     * One alert on its own, for the fast path to inject. Same markup as
+     * the server renders, without the stack wrapper.
+     */
+    public function renderOne(Alert $alert): string
+    {
+        return $this->options->compat ? $this->compat($alert, 0, false) : $this->one($alert, 0, false);
+    }
+
+    /**
+     * The fast path's live regions, empty at load. A live region announces
+     * what changes inside it after load, so the containers must exist
+     * before anything is put in them: `role="status"` for information and
+     * warnings, `role="alert"` for emergencies. The server-rendered banner
+     * above is a landmark and is never inside these.
+     */
+    public function liveContainers(string $endpoint, int $intervalSeconds): string
+    {
+        return '<div class="beacon-live" data-beacon-live="'.$this->e($endpoint).'" data-beacon-interval="'.max(15, $intervalSeconds).'">'
+            .'<div class="beacon-live__status beacon-stack" role="status"></div>'
+            .'<div class="beacon-live__alert beacon-stack" role="alert"></div>'
+            .'</div>';
+    }
+
     private function one(Alert $alert, int $index, bool $preview): string
     {
         $h = $this->options->headingLevel;

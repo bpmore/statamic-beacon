@@ -24,3 +24,5 @@
 @media (max-width:40em){.beacon__inner{grid-template-columns:1fr}.beacon__severity,.beacon__title,.beacon__body,.beacon__more{grid-column:1}.beacon__dismiss{grid-column:1;grid-row:auto;justify-self:start}}
 @media (prefers-reduced-motion:reduce){.beacon,.beacon *{transition:none!important;animation:none!important}}
 @media (forced-colors:active){.beacon{border-bottom:3px solid CanvasText;background:Canvas;color:CanvasText}.beacon__dismiss{border-color:ButtonText}.beacon__severity::before{background:CanvasText;forced-color-adjust:none}}
+.beacon-live:empty{display:none}
+.beacon-live__status:empty,.beacon-live__alert:empty{display:none}

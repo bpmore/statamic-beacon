@@ -379,7 +379,26 @@ tabs:
                           field:
                             type: list
                             display: 'Show to these audiences'
-                            instructions: 'Weather alerts are by place, not by category, so name the audiences here. Empty means every site.'
+                            instructions: 'Weather alerts are by place, not by category, so name the audiences here. Empty means every site. Ignored when the table below has rows.'
+                        -
+                          handle: geocodes
+                          field:
+                            type: grid
+                            display: 'Audiences by area code'
+                            instructions: 'Optional, for a feed that covers more than one place. A SAME county code (six digits, such as 005119) or a UGC zone (such as ARZ044), and the audiences it concerns, separated by commas. An alert is shown to the audiences of every code it carries; an alert carrying none of these codes is not shown at all.'
+                            mode: table
+                            add_row: 'Add an area'
+                            fields:
+                              -
+                                handle: code
+                                field:
+                                  type: text
+                                  display: 'SAME or UGC code'
+                              -
+                                handle: audiences
+                                field:
+                                  type: text
+                                  display: 'Audiences'
                         -
                           handle: max_age
                           field:
@@ -736,6 +755,25 @@ tabs:
               type: text
               display: 'Address parameter'
               default: beacon-preview
+              width: 50
+      -
+        display: 'Live emergency updates'
+        instructions: 'Off, a visitor sees new alerts on their next page load. On, a small script asks this site for current emergencies every so often and shows a new one on the page they already have open, and takes it down again when it ends. It asks this site only, never the remote source, and is only as fresh as the scheduler.'
+        fields:
+          -
+            handle: fast_path_enabled
+            field:
+              type: toggle
+              display: 'Show new emergencies without a page load'
+              default: false
+              width: 50
+          -
+            handle: fast_path_interval
+            field:
+              type: integer
+              display: 'Check every (seconds)'
+              instructions: 'At least 15.'
+              default: 60
               width: 50
       -
         display: Scheduler

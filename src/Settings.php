@@ -46,6 +46,8 @@ final class Settings
         'preview_enabled' => 'preview.enabled',
         'preview_parameter' => 'preview.parameter',
         'warn_after' => 'scheduler.warn_after',
+        'fast_path_enabled' => 'fast_path.enabled',
+        'fast_path_interval' => 'fast_path.interval',
     ];
 
     /** Fields the form collects in a different shape from the file. */
@@ -200,14 +202,15 @@ final class Settings
                 'severity_map' => ParserFactory::WORDPRESS_SEVERITY_MAP,
                 'default_severity' => self::str($b, 'default_severity'),
             ], fn ($v) => $v !== null),
-            'cap' => self::str($b, 'url') === null ? null : $common + [
+            'cap' => self::str($b, 'url') === null ? null : $common + array_filter([
                 'driver' => 'cap',
                 'url' => self::str($b, 'url'),
+                'geocodes' => ParserFactory::geocodes($b['geocodes'] ?? null) ?: null,
                 'headers' => array_filter([
                     'User-Agent' => self::str($b, 'user_agent'),
                     'Accept' => 'application/geo+json, application/cap+xml, application/atom+xml, application/xml;q=0.9, */*;q=0.8',
                 ]),
-            ],
+            ], fn ($v) => $v !== null),
             'github_file' => self::str($b, 'owner') === null || self::str($b, 'repo') === null ? null : $common + array_filter([
                 'driver' => 'github',
                 'mode' => 'file',

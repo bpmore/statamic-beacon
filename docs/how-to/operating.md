@@ -69,6 +69,17 @@ polling every five minutes costs nothing in cache hits.
 
 Previews bypass the cache both ways.
 
+## Live emergency updates
+
+Off by default. On the settings screen, Preview and scheduler tab, "Show
+new emergencies without a page load". A script on every page then asks
+`/!/statamic-beacon/live` on this site every so often (60 seconds by
+default, 15 at the fastest) and shows a new emergency on the page a
+visitor already has open. It is only as fresh as the scheduler, because
+the endpoint serves what the scheduler last stored; it never contacts a
+remote source itself. Cost: one small same-origin request per open tab
+per interval. Behind a static cache the endpoint is never cached.
+
 ## Monitoring
 
 ```

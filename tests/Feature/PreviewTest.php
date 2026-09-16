@@ -28,7 +28,7 @@ it('renders nothing for a signed-in user without the permission', function () {
 });
 
 it('renders the newest alert at the asked severity, marked as a preview, for a permitted user', function () {
-    $html = $this->actingAs(userWith(Beacon::PERMISSION_PREVIEW))->get('/home?beacon-preview=emergency')->assertOk()->getContent();
+    $html = markupOnly($this->actingAs(userWith(Beacon::PERMISSION_PREVIEW))->get('/home?beacon-preview=emergency')->assertOk()->getContent());
 
     expect($html)->toContain('Draft for review')
         ->and($html)->toContain('beacon--preview')

@@ -15,18 +15,6 @@ use Statamic\Facades\Addon;
  * and for whatever the form leaves blank.
  */
 
-/** Save the screen as a person pressing Save would. */
-function saveSettings(array $values): void
-{
-    $settings = Addon::get(Settings::PACKAGE)->settings();
-
-    foreach ($values as $handle => $value) {
-        $settings->set($handle, $value);
-    }
-
-    $settings->save();
-}
-
 beforeEach(function () {
     \Illuminate\Support\Facades\File::delete(resource_path('addons/statamic-beacon.yaml'));
 });
@@ -118,7 +106,7 @@ it('switches everything off with a Nothing block', function () {
 
 it('maps every other block type to its driver', function () {
     saveSettings(['sources' => [
-        ['type' => 'cap', 'url' => 'https://api.weather.gov/alerts/active?point=1,2', 'user_agent' => 'test (a@b.c)', 'max_severity' => 'warning', 'audiences' => ['campus']],
+        ['type' => 'cap', 'url' => 'https://api.weather.gov/alerts/active?point=1,2', 'user_agent' => 'test (a@b.c)', 'max_severity' => 'warning', 'audiences' => ['campus'], 'geocodes' => [['code' => '005119', 'audiences' => 'campus, clinic']]],
         ['type' => 'github_file', 'owner' => 'o', 'repo' => 'r', 'ref' => 'main', 'path' => 'alerts.json'],
         ['type' => 'github_issues', 'owner' => 'o', 'repo' => 'r', 'label' => 'alert', 'token' => 'ghp_x'],
         ['type' => 'gist', 'url' => 'https://gist.githubusercontent.com/o/1/raw/alerts.json'],
@@ -132,6 +120,7 @@ it('maps every other block type to its driver', function () {
         ->and($d[0]->headers['User-Agent'])->toBe('test (a@b.c)')
         ->and($d[0]->maxSeverity?->value)->toBe('warning')
         ->and($d[0]->audiences)->toBe(['campus'])
+        ->and($d[0]->option('geocodes'))->toBe(['005119' => ['campus', 'clinic']])
         ->and($d[1]->url)->toBe('https://raw.githubusercontent.com/o/r/main/alerts.json')
         ->and($d[2]->url)->toContain('api.github.com/repos/o/r/issues')
         ->and($d[2]->headers['Authorization'])->toBe('Bearer ghp_x')

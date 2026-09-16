@@ -29,6 +29,10 @@ First build against the v2 brief.
 - How-to guides under `docs/how-to` for every source and for operating
   the addon, and a reference for the WordPress.com feed contract under
   `docs/reference`.
+- An optional emergency fast path: an endpoint on this origin serving
+  the stored emergencies, and a script that injects a new one into a
+  `role="alert"` live region on an open page and removes it when it ends.
+- CAP geocode filtering: SAME and UGC codes mapped to audiences per source.
 - Commands: `beacon:install`, `beacon:tick`, `beacon:fetch`,
   `beacon:status`. A utility page under Tools.
-- 196 tests, every discriminating case from the brief among them.
+- 208 tests, every discriminating case from the brief among them.

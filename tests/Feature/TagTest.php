@@ -12,7 +12,8 @@ beforeEach(function () {
 it('renders a published local alert first in the body, before the skip link, with no dismiss control', function () {
     localAlert(['title' => 'Boil water notice', 'severity' => 'emergency']);
 
-    $html = $this->get('/home')->assertOk()->getContent();
+    $page = $this->get('/home')->assertOk()->getContent();
+    $html = markupOnly($page);
 
     $banner = strpos($html, 'role="region"');
     $skip = strpos($html, 'class="skip"');
@@ -28,8 +29,8 @@ it('renders a published local alert first in the body, before the skip link, wit
         ->and(str_contains($html, 'role="alert"'))->toBeFalse()
         ->and(substr_count($html, '<h1'))->toBe(1)
         ->and($html)->toContain('<h2 class="beacon__title"')
-        ->and($html)->toContain('<style>')
-        ->and($html)->toContain('<script data-beacon-dismiss="Dismiss">');
+        ->and($page)->toContain('<style>')
+        ->and($page)->toContain('<script data-beacon-dismiss="Dismiss">');
 });
 
 it('renders nothing when there are no alerts', function () {

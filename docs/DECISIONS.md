@@ -92,11 +92,24 @@ password` on the form but land in `resources/addons/statamic-beacon.yaml`
 in plain text, as every addon setting does; the form says a token is
 optional and why.
 
-## Not built, on purpose
+## The fast path asks this origin, never the source
 
-The emergency fast path (client-side polling of a Beacon endpoint between
-scheduled fetches) and CAP geocode filtering. Both are in the brief as
-"ask before building".
+Built after the owner asked. The endpoint serves the store the
+scheduler fills, rendered with the same `Banner`, so the page script
+never holds unsanitized content and never contacts a remote host. It is
+off by default because it is a request per open tab per interval, and
+because a site whose scheduler runs every minute and whose static cache
+is flushed on change gets most of the benefit on the next page load
+anyway. The live regions are empty at load and separate from the
+landmark, which is what keeps the server-rendered banner from being
+announced twice.
+
+## CAP geocodes replace, not extend, the source audiences
+
+When a `geocodes` map is given, an alert matching none of its codes is
+dropped rather than falling back to the source-wide audiences. A feed
+covering a whole state would otherwise show every county's warning to
+every site the moment one row was added.
 
 ## Compatibility mode takes a prefix
 

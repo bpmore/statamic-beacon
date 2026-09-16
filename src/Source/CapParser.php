@@ -45,14 +45,24 @@ final class CapParser implements Parser
     ];
 
     /**
+     * Audience targeting for CAP is geographic. Two ways, in order of
+     * preference: `geocodes` maps a CAP geocode value (a SAME county code
+     * such as `005119`, or a UGC zone such as `ARZ044`) to the audiences
+     * it concerns, and an alert is aimed at the union of the audiences of
+     * every code it carries; an alert carrying none of the configured
+     * codes is dropped. Without `geocodes`, every alert goes to
+     * `audiences`, the source-wide list.
+     *
      * @param  list<array{severity?: list<string>, urgency?: list<string>, to: string}>  $matrix
-     * @param  list<string>  $audiences  assigned to every alert from this source
+     * @param  list<string>  $audiences  assigned to every alert when no geocode map is given
+     * @param  array<string, list<string>>  $geocodes  geocode value => audiences
      */
     public function __construct(
         private readonly RemoteAlertFactory $factory,
         private readonly array $matrix = self::DEFAULT_MATRIX,
         private readonly array $audiences = [],
         private readonly bool $appendInstruction = true,
+        private readonly array $geocodes = [],
     ) {}
 
     public function parse(string $body, string $contentType = ''): array
@@ -126,6 +136,7 @@ final class CapParser implements Parser
             'expires' => Xml::text($info, 'expires'),
             'web' => Xml::text($info, 'web'),
             'references' => Xml::text($el, 'references'),
+            'geocodes' => $this->xmlGeocodes($info),
         ];
 
         if ($fields['web'] === null && $inline) {
@@ -182,7 +193,17 @@ final class CapParser implements Parser
                 }
             }
 
+            $geocodes = [];
+            foreach ((array) ($p['geocode'] ?? []) as $values) {
+                foreach ((array) $values as $value) {
+                    if (is_scalar($value)) {
+                        $geocodes[] = (string) $value;
+                    }
+                }
+            }
+
             $one = $this->build([
+                'geocodes' => $geocodes,
                 'identifier' => isset($p['identifier']) ? (string) $p['identifier'] : (isset($p['id']) ? (string) $p['id'] : null),
                 'severity' => isset($p['severity']) ? (string) $p['severity'] : null,
                 'urgency' => isset($p['urgency']) ? (string) $p['urgency'] : null,
@@ -221,12 +242,18 @@ final class CapParser implements Parser
 
         $id = is_string($f['identifier'] ?? null) && $f['identifier'] !== '' ? $f['identifier'] : hash('sha256', $f['headline']);
 
+        $audiences = $this->audiencesFor((array) ($f['geocodes'] ?? []));
+
+        if ($audiences === null) {
+            return null;
+        }
+
         $alert = $this->factory->fromSafeHtml(
             $id,
             $f['headline'],
             $body,
             $this->severity($f['severity'] ?? null, $f['urgency'] ?? null),
-            $this->audiences,
+            $audiences,
             Dates::parse($f['effective'] ?? null),
             Dates::parse($f['expires'] ?? null),
             is_string($f['web'] ?? null) ? $f['web'] : null,
@@ -242,6 +269,57 @@ final class CapParser implements Parser
         }
 
         return ['alert' => $alert, 'references' => array_values(array_map('strval', (array) $references))];
+    }
+
+    /**
+     * The audiences an alert is for, from its geocodes, or null when the
+     * source filters by geocode and this alert matches none.
+     *
+     * @param  list<string>  $codes
+     * @return list<string>|null
+     */
+    private function audiencesFor(array $codes): ?array
+    {
+        if ($this->geocodes === []) {
+            return $this->audiences;
+        }
+
+        $out = [];
+
+        foreach ($codes as $code) {
+            $code = strtoupper(trim($code));
+
+            foreach ($this->geocodes as $configured => $audiences) {
+                if (strtoupper(trim((string) $configured)) !== $code) {
+                    continue;
+                }
+
+                foreach ((array) $audiences as $a) {
+                    if (is_scalar($a) && trim((string) $a) !== '') {
+                        $out[] = trim((string) $a);
+                    }
+                }
+            }
+        }
+
+        $out = array_values(array_unique($out));
+
+        return $out === [] ? null : $out;
+    }
+
+    /** Every geocode value under an <info>, whatever its valueName. @return list<string> */
+    private function xmlGeocodes(DOMElement $info): array
+    {
+        $out = [];
+
+        foreach (Xml::children($info, 'geocode') as $geocode) {
+            $value = Xml::text($geocode, 'value');
+            if ($value !== null) {
+                $out[] = $value;
+            }
+        }
+
+        return $out;
     }
 
     private function severity(?string $capSeverity, ?string $capUrgency): Severity

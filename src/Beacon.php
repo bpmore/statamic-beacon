@@ -209,6 +209,23 @@ final class Beacon
         return $this->all()[0] ?? null;
     }
 
+    /**
+     * The emergency fast path's settings: whether the page script polls
+     * this origin between loads, and how often.
+     *
+     * @return array{enabled: bool, interval: int, severities: list<string>}
+     */
+    public function fastPath(): array
+    {
+        $config = (array) ($this->config['fast_path'] ?? []);
+
+        return [
+            'enabled' => (bool) ($config['enabled'] ?? false),
+            'interval' => max(15, (int) ($config['interval'] ?? 60)),
+            'severities' => array_map(fn ($s) => $s->value, \Bpmore\Beacon\Http\Controllers\LiveController::severities($config['severities'] ?? ['emergency'])),
+        ];
+    }
+
     // -- Scheduling --------------------------------------------------------
 
     /**

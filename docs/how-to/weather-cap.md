@@ -25,7 +25,14 @@ approach the rest.
    warning warrants an emergency banner, a person publishes one.
 5. "Show to these audiences": weather alerts are by place, not by
    category, so name the audiences here. Leave empty for every site.
-6. Save.
+6. Or, for a feed that covers several places (an `area=` or `zone=`
+   address rather than a `point=`), fill in "Audiences by area code":
+   one row per SAME county code (six digits, `005119`) or UGC zone
+   (`ARZ044`), with the audiences it concerns. Then an alert reaches the
+   audiences of every code it carries, and an alert carrying none of the
+   listed codes is not shown. The codes are in each alert's `geocode`
+   block; the NWS lists them per county and zone.
+7. Save.
 
 ## In the config file
 
@@ -51,6 +58,8 @@ approach the rest.
 - Honours `expires` even if the next fetch fails, so a warning that
   expired at 4pm is down at 4pm.
 - Replaces an alert with its update rather than showing both.
+- With "Audiences by area code" filled in, reads each alert's `geocode`
+  values (SAME and UGC) and aims the alert at the audiences they map to.
 - Reads both the JSON the NWS API serves and CAP XML from any publisher,
   with or without the `cap:` prefix.
 
