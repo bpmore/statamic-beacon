@@ -1,68 +1,46 @@
-# Changelog
+# Release Notes
 
 ## 0.1.5 (2026-09-16)
 
-- Fixed: the Beacon page under Tools failed to render from 0.1.2 to 0.1.4.
-  A Blade directive with no space before it was left uncompiled and its
-  `@endif` then broke the view. The utility test is now run as part of
-  every release check, not on its own.
-- Local alerts' message and teaser go through the same sanitizer as a
-  remote feed.
-- The preview parameter bypasses the static cache only for a permitted
-  preview. Anyone else adding it to a link gets the cached page.
+### What's fixed
+- The Beacon page under Tools failed to render from 0.1.2 to 0.1.4. A Blade directive with no space before it was left uncompiled and its `@endif` then broke the view. The full test suite now runs on every change, not one file at a time.
+
+### What's improved
+- Local alerts' message and teaser go through the same sanitizer as a remote feed.
+- The preview parameter bypasses the static cache only for a permitted preview. Anyone else adding it to a link gets the cached page.
 
 ## 0.1.4 (2026-09-16)
 
+### What's fixed
 - `DOCUMENTATION.md`: two links named by their repository path.
 
 ## 0.1.3 (2026-09-16)
 
-- `DOCUMENTATION.md`: every how-to guide and the feed reference in one
-  file, for the marketplace listing.
+### What's new
+- `DOCUMENTATION.md`: every how-to guide and the feed reference in one file, for the marketplace listing.
 
 ## 0.1.2 (2026-09-16)
 
+### What's fixed
 - Utility page: no space before the comma in the GitHub rate-limit line.
 
 ## 0.1.1 (2026-09-16)
 
-- Settings screen: the sources list and the site audiences map take the
-  full row instead of half of it.
+### What's fixed
+- Settings screen: the sources list and the site audiences map take the full row instead of half of it.
 
 ## 0.1.0 (2026-09-16)
 
-First build against the v2 brief.
-
-- Pure PHP core: `Alert`, three-level `Severity` with precedence, exact
-  audience matching, a selector for what is live now, sanitizer, teaser
-  split, URL scheme check, entity-decoded titles, Markdown with HTML
-  stripped, plain-text bodies for CAP.
-- Sources: local collection, JSON through a field map (WordPress.com
-  defaults, JSONP unwrapped as text), RSS and Atom, CAP 1.2 in XML and NWS JSON-LD,
-  GitHub file, Gist and issues, null. Sources chain in order with a
-  per-source severity ceiling and audience restriction.
-- Fetching on the scheduler with retained payloads, a retention ceiling,
-  conditional requests, GitHub rate-limit backoff, and a fingerprint that
-  clears the page cache only when the banner changed.
+### What's new
+- Pure PHP core: `Alert`, three-level `Severity` with precedence, exact audience matching, a selector for what is live now, sanitizer, teaser split, URL scheme check, entity-decoded titles, Markdown with HTML stripped, plain-text bodies for CAP.
+- Sources: local collection, JSON through a field map (WordPress.com defaults, JSONP unwrapped as text), RSS and Atom, CAP 1.2 in XML and NWS JSON-LD, GitHub file, Gist and issues, null. Sources chain in order with a per-source severity ceiling and audience restriction.
+- Fetching on the scheduler with retained payloads, a retention ceiling, conditional requests, GitHub rate-limit backoff, and a fingerprint that clears the page cache only when the banner changed.
 - Scheduled starts and ends clear the page cache at the moment they pass.
-- Preview by query parameter, permissioned, allowlisted, bypassing the
-  static cache both ways.
-- Banner rendered as a landmark with a configurable heading level (h2 to
-  h6), a severity word, an accessible Read more name, script-added
-  dismissal keyed by content, bundled styles, and a compatibility mode
-  emitting a legacy client's structure under a configurable class prefix.
-- A settings screen under Addons, Beacon: sources as blocks (local
-  collection, WordPress.com alert site, JSON, RSS/Atom, CAP, GitHub file, issues, Gist,
-  Nothing), audience and site map, banner wording, preview, scheduler
-  warning. The screen overlays the config file once saved.
-- How-to guides under `docs/how-to` for every source and for operating
-  the addon, and a reference for the WordPress.com feed contract under
-  `docs/reference`.
-- An optional emergency fast path: an endpoint on this origin serving
-  the stored emergencies, and a script that injects a new one into a
-  `role="alert"` live region on an open page and removes an ended one,
-  whether the script or the server put it there.
+- Preview by query parameter, permissioned, allowlisted, bypassing the static cache both ways.
+- Banner rendered as a landmark with a configurable heading level (h2 to h6), a severity word, an accessible Read more name, script-added dismissal keyed by content, bundled styles, and a compatibility mode emitting a legacy client's structure under a configurable class prefix.
+- A settings screen under Addons, Beacon: sources as blocks (local collection, WordPress.com alert site, JSON, RSS/Atom, CAP, GitHub file, issues, Gist, Nothing), audience and site map, banner wording, preview, scheduler warning. The screen overlays the config file once saved.
+- How-to guides under `docs/how-to` for every source and for operating the addon, and a reference for the WordPress.com feed contract under `docs/reference`.
+- An optional emergency fast path: an endpoint on this origin serving the stored emergencies, and a script that injects a new one into a `role="alert"` live region on an open page and removes an ended one, whether the script or the server put it there.
 - CAP geocode filtering: SAME and UGC codes mapped to audiences per source.
-- Commands: `beacon:install`, `beacon:tick`, `beacon:fetch`,
-  `beacon:status`. A utility page under Tools.
+- Commands: `beacon:install`, `beacon:tick`, `beacon:fetch`, `beacon:status`. A utility page under Tools.
 - 208 tests, every discriminating case from the brief among them.
