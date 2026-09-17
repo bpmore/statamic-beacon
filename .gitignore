@@ -8,3 +8,6 @@ composer.lock
 
 # The build brief and conventions are working documents, kept out of the public repo.
 /docs/private
+
+# Statamic's marketplace review skill, kept local: it is their file, not ours.
+/.agents
