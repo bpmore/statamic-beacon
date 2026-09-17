@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3 (2026-09-16)
+
+- `DOCUMENTATION.md`: every how-to guide and the feed reference in one
+  file, for the marketplace listing.
+
 ## 0.1.2 (2026-09-16)
 
 - Utility page: no space before the comma in the GitHub rate-limit line.

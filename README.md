@@ -23,7 +23,8 @@ same case, so a monitor can watch it.
 ## How-to guides
 
 One per source, plus one for the server owner, in
-[docs/how-to](docs/how-to/README.md). Joining a WordPress.com alert site,
+[docs/how-to](docs/how-to/README.md), and all of them in one file as
+[DOCUMENTATION.md](DOCUMENTATION.md). Joining a WordPress.com alert site,
 and running one, is in [docs/how-to/wordpress.md](docs/how-to/wordpress.md).
 What that feed looks like on the wire is in
 [docs/reference/wordpress-alert-feed.md](docs/reference/wordpress-alert-feed.md).
