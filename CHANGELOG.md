@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.2 (2026-09-16)
+
+- Utility page: no space before the comma in the GitHub rate-limit line.
+
+## 0.1.1 (2026-09-16)
+
+- Settings screen: the sources list and the site audiences map take the
+  full row instead of half of it.
+
 ## 0.1.0 (2026-09-16)
 
 First build against the v2 brief.
