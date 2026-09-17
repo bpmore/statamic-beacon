@@ -19,6 +19,10 @@ tabs:
             field:
               type: replicator
               display: Sources
+              # Addon settings render as a config form: label left, field
+              # right. A replicator in half the width is cramped; this
+              # gives it the whole row.
+              full_width_setting: true
               collapse: accordion
               button_label: 'Add a source'
               default:
@@ -625,6 +629,7 @@ tabs:
             field:
               type: grid
               display: 'Audiences by site'
+              full_width_setting: true
               instructions: 'For a multi-site install. A site not listed here uses the audience above.'
               mode: table
               add_row: 'Add a site'
