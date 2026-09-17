@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4 (2026-09-16)
+
+- `DOCUMENTATION.md`: two links named by their repository path.
+
 ## 0.1.3 (2026-09-16)
 
 - `DOCUMENTATION.md`: every how-to guide and the feed reference in one

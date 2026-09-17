@@ -691,8 +691,8 @@ review is your approval gate.
 
 1. Create a public repository, for example `youruniversity/alerts`.
 2. Add `alerts.json`. Start from
-   [../alerts.example.json](https://github.com/bpmore/statamic-beacon/blob/main/docs/alerts.example.json); the shape is in
-   [../alerts-file.schema.json](https://github.com/bpmore/statamic-beacon/blob/main/docs/alerts-file.schema.json). An empty
+   [docs/alerts.example.json](https://github.com/bpmore/statamic-beacon/blob/main/docs/alerts.example.json); the shape is in
+   [docs/alerts-file.schema.json](https://github.com/bpmore/statamic-beacon/blob/main/docs/alerts-file.schema.json). An empty
    file is `{"alerts": []}`.
 3. Settings, Branches, add a protection rule for `main`: require a pull
    request, require one approval. Now no alert goes live without a
