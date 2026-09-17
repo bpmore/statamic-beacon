@@ -98,7 +98,7 @@ final class Beacon
 
         foreach ($this->definitions() as $definition) {
             $source = match ($definition->driver) {
-                'collection' => new CollectionSource((string) ($definition->option('collection') ?? $this->config['collection'] ?? 'alerts')),
+                'collection' => new CollectionSource((string) ($definition->option('collection') ?? $this->config['collection'] ?? 'alerts'), $this->parsers->sanitizer()),
                 'null' => new NullSource,
                 default => new RemoteSource($definition, $this->poller, $this->clock),
             };
@@ -198,7 +198,7 @@ final class Beacon
                 continue;
             }
 
-            $source = new CollectionSource((string) ($definition->option('collection') ?? $this->config['collection'] ?? 'alerts'));
+            $source = new CollectionSource((string) ($definition->option('collection') ?? $this->config['collection'] ?? 'alerts'), $this->parsers->sanitizer());
             $all = $source->fetchAll();
 
             if ($all !== []) {

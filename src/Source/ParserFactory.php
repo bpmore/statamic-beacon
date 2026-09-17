@@ -37,6 +37,12 @@ final class ParserFactory
 
     public function __construct(private readonly HtmlSanitizer $sanitizer) {}
 
+    /** The one sanitizer every source shares, local collection included. */
+    public function sanitizer(): HtmlSanitizer
+    {
+        return $this->sanitizer;
+    }
+
     public function for(SourceDefinition $source): Parser
     {
         $factory = new RemoteAlertFactory($this->sanitizer, (string) $source->option('teaser_marker', Teaser::DEFAULT_MARKER));

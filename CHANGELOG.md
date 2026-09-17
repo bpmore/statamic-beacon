@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.5 (2026-09-16)
+
+- Fixed: the Beacon page under Tools failed to render from 0.1.2 to 0.1.4.
+  A Blade directive with no space before it was left uncompiled and its
+  `@endif` then broke the view. The utility test is now run as part of
+  every release check, not on its own.
+- Local alerts' message and teaser go through the same sanitizer as a
+  remote feed.
+- The preview parameter bypasses the static cache only for a permitted
+  preview. Anyone else adding it to a link gets the cached page.
+
 ## 0.1.4 (2026-09-16)
 
 - `DOCUMENTATION.md`: two links named by their repository path.

@@ -6,6 +6,7 @@ namespace Bpmore\Beacon\Statamic;
 
 use Bpmore\Beacon\Alert\Alert;
 use Bpmore\Beacon\Alert\Severity;
+use Bpmore\Beacon\Sanitize\HtmlSanitizer;
 use Bpmore\Beacon\Sanitize\UrlScheme;
 use Bpmore\Beacon\Source\AlertSource;
 use Carbon\CarbonInterface;
@@ -20,14 +21,20 @@ use Statamic\Fields\Value;
 /**
  * Alerts authored in this site's own collection.
  *
- * The bard fields are trusted as authored: this is the site's own content,
- * written by its own editors, and the blueprint restricts them to bold,
- * italic and links. The canonical URL still goes through the scheme check,
- * because a link fieldtype accepts anything typed into it.
+ * The bard fields are the site's own content, written by its own editors,
+ * and the blueprint restricts them to bold, italic and links. They still
+ * go through the same sanitizer as a remote feed: an entry can also be
+ * written by hand, imported, or edited by a script, and a marketplace
+ * reviewer reading this file should not have to take Bard's word for it.
+ * The canonical URL goes through the scheme check, because a link
+ * fieldtype accepts anything typed into it.
  */
 final class CollectionSource implements AlertSource
 {
-    public function __construct(private readonly string $handle) {}
+    public function __construct(
+        private readonly string $handle,
+        private readonly HtmlSanitizer $sanitizer,
+    ) {}
 
     public function fetch(): array
     {
@@ -148,7 +155,9 @@ final class CollectionSource implements AlertSource
             return null;
         }
 
-        return trim($html);
+        $clean = trim($this->sanitizer->sanitize(trim($html)));
+
+        return $clean === '' ? null : $clean;
     }
 
     private function date(?Value $value): ?DateTimeImmutable

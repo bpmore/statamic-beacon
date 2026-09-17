@@ -74,7 +74,7 @@
                                 <br><small>Backing off until @plain($source['backoff_until'])</small>
                             @endif
                             @if ($source['remote'] && $source['rate_limit_remaining'] !== null)
-                                <br><small>GitHub rate limit: {{ $source['rate_limit_remaining'] }} left@if ($source['rate_limit_reset']), resets @plain($source['rate_limit_reset'])@endif</small>
+                                <br><small>GitHub rate limit: {{ $source['rate_limit_remaining'] }} left{{ $source['rate_limit_reset'] ? ', resets ' : '' }}@if ($source['rate_limit_reset'])@plain($source['rate_limit_reset'])@endif</small>
                             @endif
                         </td>
                         <td>{{ $source['remote'] ? $source['alerts'] : '' }}</td>

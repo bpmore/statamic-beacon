@@ -123,3 +123,21 @@ identifiers and a migrating site sets the prefix its stylesheet expects.
 `docs/private/` is ignored. The brief and the conventions document name
 the first customer throughout and are working documents, not part of
 the addon. `CLAUDE.md` says where they live.
+
+## Local alerts go through the sanitizer too
+
+The collection is the site's own content and Bard only offers bold,
+italic and links, so the first build trusted it. Now it goes through the
+same allowlist as a remote feed. An entry can be written by hand, imported
+or edited by a script, and the cost is one function call per alert.
+
+## The preview cache bypass needs a permitted user
+
+The middleware used to swap the static cacher for any request carrying
+the preview parameter, before anyone looked at who was asking. That made
+`?beacon-preview=x` a free way to make a site render any page from
+scratch. Now the bypass, and the uncacheable header, apply only when the
+request would actually render a preview: parameter present, value in the
+enum, signed-in user with the permission. Everyone else gets the cached
+page, which shows no preview anyway.
+

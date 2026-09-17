@@ -144,3 +144,30 @@ it('emits linked assets or none when configured', function () {
     $none = $this->get('/home')->getContent();
     expect($none)->not->toContain('<style>')->and($none)->not->toContain('<script');
 });
+
+it('sanitizes a local alert\'s message and teaser like any remote body', function () {
+    alertsCollection();
+    bannerPage();
+    // One alert shows its message, the other its teaser: both fields are
+    // on the page, so both are checked.
+    localAlert([
+        'title' => 'Hand-written entry',
+        'severity' => 'warning',
+        'message' => '<p>Boil water <script>alert(1)</script><a href="javascript:alert(2)">until</a> <strong>further notice</strong>.</p>',
+    ]);
+    localAlert([
+        'title' => 'Imported entry',
+        'severity' => 'info',
+        'message' => '<p>The full text.</p>',
+        'teaser' => '<p onclick="alert(3)">Boil <em>water</em></p>',
+        'link' => 'https://example.org/boil',
+    ]);
+
+    $html = markupOnly($this->get('/home')->assertOk()->getContent());
+
+    expect(str_contains($html, '<script'))->toBeFalse('a script tag in a local message reached the page');
+    expect(str_contains($html, 'javascript:'))->toBeFalse('a javascript: link in a local message reached the page');
+    expect(str_contains($html, 'onclick'))->toBeFalse('an event handler in a local teaser reached the page');
+    expect($html)->toContain('<strong>further notice</strong>')
+        ->and($html)->toContain('<em>water</em>');
+});

@@ -55,16 +55,34 @@ it('ignores a value outside the severity allowlist, for everyone', function (str
     }
 })->with(['<script>alert(1)</script>', 'legacy-alert-urgent', 'critical', 'emergency"><img src=x onerror=x>', '']);
 
-it('marks a preview response as uncacheable, whether or not it was permitted', function () {
-    $this->actingAs(superUser())->get('/home?beacon-preview=emergency')
-        ->assertOk()
-        ->assertHeader('X-Statamic-Uncacheable', 'true');
+it('marks a permitted preview response as uncacheable, and nobody else\'s', function () {
+    // The parameter alone is not a cache bypass: an anonymous visitor, a
+    // user without the permission, and a value outside the enum all get
+    // the page as everyone else does. Anonymous goes first: actingAs()
+    // keeps its user signed in for the rest of the test.
+    $this->get('/home?beacon-preview=emergency')->assertOk()->assertHeaderMissing('X-Statamic-Uncacheable');
+    $this->actingAs(userWith(null))->get('/home?beacon-preview=emergency')->assertOk()->assertHeaderMissing('X-Statamic-Uncacheable');
+    $this->actingAs(superUser())->get('/home?beacon-preview=critical')->assertOk()->assertHeaderMissing('X-Statamic-Uncacheable');
+    $this->get('/home')->assertOk()->assertHeaderMissing('X-Statamic-Uncacheable');
 
     $this->get('/home?beacon-preview=emergency')
         ->assertOk()
         ->assertHeader('X-Statamic-Uncacheable', 'true');
+});
 
-    $this->get('/home')->assertOk()->assertHeaderMissing('X-Statamic-Uncacheable');
+it('serves an anonymous visitor carrying the parameter from the static cache', function () {
+    config()->set('statamic.static_caching.strategy', 'half');
+    config()->set('statamic.static_caching.ignore_query_strings', true);
+
+    $this->get('/home')->assertOk();
+    $cacher = app(\Statamic\StaticCaching\Cacher::class);
+    expect($cacher->hasCachedPage(\Illuminate\Http\Request::create('/home')))->toBeTrue('the plain page was cached');
+
+    // Break the page so a fresh render would differ from the cached one.
+    localAlert(['title' => 'Rendered fresh, not cached', 'severity' => 'warning']);
+
+    $html = $this->get('/home?beacon-preview=emergency')->assertOk()->getContent();
+    expect(str_contains($html, 'Rendered fresh, not cached'))->toBeFalse('the anonymous preview URL was rendered fresh instead of served from the cache');
 });
 
 it('can be switched off', function () {
