@@ -18,6 +18,10 @@
             "homepage": "https://hada.farm"
         }
     ],
+    "support": {
+        "issues": "https://github.com/bpmore/statamic-beacon/issues",
+        "source": "https://github.com/bpmore/statamic-beacon"
+    },
     "require": {
         "php": "^8.2",
         "ext-dom": "*",

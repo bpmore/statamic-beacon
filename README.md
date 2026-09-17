@@ -289,6 +289,7 @@ source chain where at least one entry is.
 
 ## Support
 
-Issues and pull requests on GitHub. This is a free addon maintained
-alongside Had A Farm's other Statamic addons; there is no support
-agreement.
+Issues and pull requests at
+[github.com/bpmore/statamic-beacon](https://github.com/bpmore/statamic-beacon/issues).
+This is a free addon maintained alongside Had A Farm's other Statamic
+addons; there is no support agreement.

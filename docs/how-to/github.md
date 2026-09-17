@@ -95,6 +95,12 @@ token raises it to 5,000. The file mode has none of this.
 2. On the settings screen: Add a source, "Open issues on GitHub". Owner,
    repository, label `alert`. Token if you have one. Save.
 
+   A token typed into the screen is saved in plain text to
+   `resources/addons/statamic-beacon.yaml`, which most sites commit. If
+   the token must stay out of the repository, leave the field empty and
+   put the source in the config file with `env('BEACON_GITHUB_TOKEN')`,
+   as below.
+
 ```php
 ['driver' => 'github', 'key' => 'issues', 'mode' => 'issues',
  'owner' => 'youruniversity', 'repo' => 'alerts', 'label' => 'alert',

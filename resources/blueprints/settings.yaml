@@ -477,7 +477,7 @@ tabs:
                           field:
                             type: text
                             display: 'Access token (optional)'
-                            instructions: 'Only for a private repository. A token expires one day and takes the banner with it, so prefer a public one.'
+                            instructions: 'Only for a private repository. A token expires one day and takes the banner with it, so prefer a public one. Saved in plain text to resources/addons/statamic-beacon.yaml, which most sites commit: for a token that must stay out of the repository, leave this empty and set BEACON_GITHUB_TOKEN in .env with the config file instead.'
                             input_type: password
                         -
                           handle: max_age
@@ -549,7 +549,7 @@ tabs:
                           field:
                             type: text
                             display: 'Access token (optional)'
-                            instructions: 'Raises the limit to 5,000 checks an hour. Optional on purpose.'
+                            instructions: 'Raises the limit to 5,000 checks an hour. Optional on purpose. Saved in plain text to resources/addons/statamic-beacon.yaml, which most sites commit: for a token that must stay out of the repository, leave this empty and set BEACON_GITHUB_TOKEN in .env with the config file instead.'
                             input_type: password
                         -
                           handle: max_age
