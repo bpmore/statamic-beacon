@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.1.6 (2026-09-17)
+
+### What's improved
+- Release notes in the shape the marketplace reads: what's new, improved and fixed under each version.
+
 ## 0.1.5 (2026-09-16)
 
 ### What's fixed
